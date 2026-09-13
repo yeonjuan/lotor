@@ -5,6 +5,7 @@ export type ReportFormat = "stdout" | "json" | "html";
 interface ParsedArgs {
   patterns: string[];
   help?: boolean;
+  debug?: boolean;
   ignorePatterns: string[];
   report: ReportFormat;
   out?: string;
@@ -20,21 +21,9 @@ const parser = optionator({
       description: "Show help",
     },
     {
-      option: "ignore",
-      type: "[String]",
-      description: "Ignore pattern",
-    },
-    {
-      option: "report",
-      type: "String",
-      default: "stdout",
-      description: "Report format: stdout, json, html",
-    },
-    {
-      option: "out",
-      type: "String",
-      description:
-        "Output file path for json/html report (default: report.json or report.html)",
+      option: "debug",
+      type: "Boolean",
+      description: "Enable debug logging",
     },
   ],
 });
