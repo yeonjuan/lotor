@@ -13,17 +13,6 @@ describe("typeDeclaration", () => {
       expect(reports).toHaveLength(0);
     });
 
-    it("same structure in one file", async () => {
-      const reports = await runAnalyzer(typeDeclaration, [
-        {
-          filePath: "a.ts",
-          code: "type A = string; type B = string;",
-          language: tsLanguage,
-        },
-      ]);
-      expect(reports).toHaveLength(0);
-    });
-
     it("same name but different structure", async () => {
       const reports = await runAnalyzer(typeDeclaration, [
         { filePath: "a.ts", code: "type A = string;", language: tsLanguage },
@@ -34,6 +23,18 @@ describe("typeDeclaration", () => {
   });
 
   describe("invalid", () => {
+    it("same structure in one file", async () => {
+      const reports = await runAnalyzer(typeDeclaration, [
+        {
+          filePath: "a.ts",
+          code: "type A = string; type B = string;",
+          language: tsLanguage,
+        },
+      ]);
+      expect(reports).toHaveLength(1);
+      expect(reports[0].locations).toHaveLength(2);
+    });
+
     it("identical type aliases in two files", async () => {
       const reports = await runAnalyzer(typeDeclaration, [
         { filePath: "a.ts", code: "type A = string;", language: tsLanguage },
