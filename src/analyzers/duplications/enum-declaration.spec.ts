@@ -21,17 +21,6 @@ describe("enumDeclaration", () => {
       expect(reports).toHaveLength(0);
     });
 
-    it("same members in one file", async () => {
-      const reports = await runAnalyzer(enumDeclaration, [
-        {
-          filePath: "a.ts",
-          code: "enum A { X = 'X' } enum B { X = 'X' }",
-          language: tsLanguage,
-        },
-      ]);
-      expect(reports).toHaveLength(0);
-    });
-
     it("same name but different members", async () => {
       const reports = await runAnalyzer(enumDeclaration, [
         {
@@ -50,6 +39,18 @@ describe("enumDeclaration", () => {
   });
 
   describe("invalid", () => {
+    it("same members in one file", async () => {
+      const reports = await runAnalyzer(enumDeclaration, [
+        {
+          filePath: "a.ts",
+          code: "enum A { X = 'X' } enum B { X = 'X' }",
+          language: tsLanguage,
+        },
+      ]);
+      expect(reports).toHaveLength(1);
+      expect(reports[0].locations).toHaveLength(2);
+    });
+
     it("identical enums in two files", async () => {
       const reports = await runAnalyzer(enumDeclaration, [
         {

@@ -35,17 +35,6 @@ describe("hardcodedUrl", () => {
       expect(reports).toHaveLength(0);
     });
 
-    it("same URL used multiple times in one file", async () => {
-      const reports = await runAnalyzer(hardcodedUrl, [
-        {
-          filePath: "a.ts",
-          code: `const a = "https://example.com"; const b = "https://example.com";`,
-          language: tsLanguage,
-        },
-      ]);
-      expect(reports).toHaveLength(0);
-    });
-
     it("non-URL string literals are not detected", async () => {
       const reports = await runAnalyzer(hardcodedUrl, [
         {
@@ -80,6 +69,18 @@ describe("hardcodedUrl", () => {
   });
 
   describe("invalid", () => {
+    it("same URL used multiple times in one file", async () => {
+      const reports = await runAnalyzer(hardcodedUrl, [
+        {
+          filePath: "a.ts",
+          code: `const a = "https://example.com"; const b = "https://example.com";`,
+          language: tsLanguage,
+        },
+      ]);
+      expect(reports).toHaveLength(1);
+      expect(reports[0].locations).toHaveLength(2);
+    });
+
     it("same URL string literal in two files", async () => {
       const reports = await runAnalyzer(hardcodedUrl, [
         {

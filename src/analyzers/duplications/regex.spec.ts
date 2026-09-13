@@ -21,13 +21,6 @@ describe("regex", () => {
       expect(reports).toHaveLength(0);
     });
 
-    it("same regex used multiple times in one file", async () => {
-      const reports = await runAnalyzer(regex, [
-        { filePath: "a.ts", code: "/foo/; /foo/;", language: tsLanguage },
-      ]);
-      expect(reports).toHaveLength(0);
-    });
-
     it("same regex in different language files", async () => {
       const reports = await runAnalyzer(regex, [
         { filePath: "a.ts", code: "/foo/;", language: tsLanguage },
@@ -46,6 +39,15 @@ describe("regex", () => {
   });
 
   describe("invalid", () => {
+    it("same regex used multiple times in one file", async () => {
+      const reports = await runAnalyzer(regex, [
+        { filePath: "a.ts", code: "/foo/; /foo/;", language: tsLanguage },
+      ]);
+      expect(reports).toHaveLength(1);
+      expect(reports[0].message).toBe("Duplicate RegExp `/foo/`");
+      expect(reports[0].locations).toHaveLength(2);
+    });
+
     it("same regex in two files", async () => {
       const reports = await runAnalyzer(regex, [
         { filePath: "a.ts", code: "/foo/;", language: tsLanguage },

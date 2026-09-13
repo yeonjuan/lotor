@@ -57,13 +57,13 @@ interface DuplicationsAnalyzer {
   visitor(context: VisitorContext): VisitorObject;
   analyze(context: AnalyzeContext): void;
 }
-// VisitorContext.collect() stores items; analyze() groups and reports cross-file duplicates
+// VisitorContext.collect() stores items; analyze() groups and reports duplicates (same file or across files)
 // ReportItem: { message: string; locations: { filePath, line, column }[] }
 ```
 
-Flow: walk all files → collect items → analyze() groups by `languageId:::key` → report if 2+ files
+Flow: walk all files → collect items → analyze() groups by `languageId:::key` → report if 2+ occurrences
 
-- Cross-file duplicates only (same `languageId` required)
+- Same-file and cross-file duplicates both reported (same `languageId` required)
 - `analyzeCrossFileDuplicates` helper handles the grouping logic
 - `className` is the exception: within-attribute duplicate class detection, single file
 

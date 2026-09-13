@@ -36,7 +36,9 @@ describe("jsxSvg", () => {
       ]);
       expect(reports).toHaveLength(0);
     });
+  });
 
+  describe("invalid", () => {
     it("same SVG used multiple times in one file", async () => {
       const reports = await runAnalyzer(jsxSvg, [
         {
@@ -45,11 +47,10 @@ describe("jsxSvg", () => {
           language: tsxLanguage,
         },
       ]);
-      expect(reports).toHaveLength(0);
+      expect(reports).toHaveLength(1);
+      expect(reports[0].locations).toHaveLength(2);
     });
-  });
 
-  describe("invalid", () => {
     it("identical SVGs in two files", async () => {
       const reports = await runAnalyzer(jsxSvg, [
         {
